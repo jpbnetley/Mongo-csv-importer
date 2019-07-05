@@ -1,6 +1,7 @@
 import java.net.URI
 
 import Util.DataBuilder
+import Util.Database.Database
 import Util.File.FileHelper
 
 
@@ -19,20 +20,23 @@ object Main extends App {
     val lineItems       = fileLines.drop(1)
     val collectionName  = file.getName.replace(".csv","").toLowerCase
 
-    val json = DataBuilder.DataBuilder.buildJsonData(headers, lineItems)
-    println(json.fold(identity, identity))
+    val json        = DataBuilder.DataBuilder.buildJsonData(headers, lineItems)
+    val result      = json.fold(e => {println(s"ERROR: $e");List.empty[String]}, identity)
+    val jsonString  = s"{ [${result.mkString(",")}] }"
+    println(jsonString)
 
-//    val db        = Database.init()
-//    db.createCollection(collectionName)
-//    db.getCollection(collectionName).bulkWrite(lineItems)//body does not conform to type...
+    val db        = Database.init()
+    db.createCollection(collectionName)
+    db.getCollection(collectionName).bulkWrite(lineItems)//body does not conform to type...
     println(s"Done processing file ${index + 1}")
   }
 
   def promptUser(): Either[Exception, URI] = {
     try {
-      println("Please enter the path to the csv files: ")
-      val uriInput = scala.io.StdIn.readLine()
-      Right(URI.create(uriInput))
+//      println("Please enter the path to the csv files: ")
+//      val uriInput = scala.io.StdIn.readLine()
+//      Right(URI.create(uriInput))
+      Right(URI.create("/Users/jonathan/Desktop/test_csv"))
     } catch {
       case e: Exception =>
         val message = s"Could not read user input: ${e.getMessage}"

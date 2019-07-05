@@ -3,27 +3,36 @@ package Util.DataBuilder
 
 object DataBuilder {
 
-  def buildJsonData(headers: Option[List[String]], lineItems: List[String]): Either[String, String] = {
+  def buildJsonData(headers: Option[List[String]], lineItems: List[String]): Either[String, List[String]]= {
     val header = headers match {
       case Some(h) => Right(h)
       case None    => Left("No Headers found for csv")
     }
 
-    header.map{ headerValue =>
-      val file = {
+    header.map { headerValue =>
         lineItems.flatMap { line =>
-          for {
-            headItem  <- headerValue
-            csv       <- line.split(',').toList
-          } yield s"$headItem : $csv"
+          headerValue.zip(line.split(',').toList).zipWithIndex.map { case ((headerText, item), index) =>
+            formatJson(index, headerText, item, headerValue.length -1)
+          }
         }
-      }
+    }
+  }
 
+  def formatJson(currentIndex: Int, headerText: String, item: String, maxIndex: Int): String = {
+    if (currentIndex == 0 && maxIndex == currentIndex) {
+      s"{ $headerText : $item }"
+    } else if (currentIndex == 0) {
       s"""
          |{
-         |${file.mkString(", ")}
+         |   $headerText: $item""".stripMargin
+    }
+    else if (currentIndex == maxIndex) {
+      s"""
+         |   $headerText: $item
          |}
-       """.stripMargin
+      """.stripMargin
+    } else {
+      s"$headerText: $item"
     }
   }
 
