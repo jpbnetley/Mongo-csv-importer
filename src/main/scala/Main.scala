@@ -3,7 +3,7 @@ import java.net.URI
 import Util.DataBuilder
 import Util.Database.Database
 import Util.File.FileHelper
-
+import org.bson.Document
 
 object Main extends App {
 
@@ -23,11 +23,11 @@ object Main extends App {
     val json        = DataBuilder.DataBuilder.buildJsonData(headers, lineItems)
     val result      = json.fold(e => {println(s"ERROR: $e");List.empty[String]}, identity)
     val jsonString  = s"{ [${result.mkString(",")}] }"
-    println(jsonString)
-
+    //http://zetcode.com/db/mongodbjava/
+//
     val db        = Database.init()
     db.createCollection(collectionName)
-    db.getCollection(collectionName).bulkWrite(lineItems)//body does not conform to type...
+    db.getCollection(collectionName).insert
     println(s"Done processing file ${index + 1}")
   }
 
