@@ -1,5 +1,6 @@
 package Util.File
 import java.io.File
+import java.net.URI
 import java.nio.charset.StandardCharsets
 
 import scala.io.Source
@@ -12,9 +13,9 @@ object FileHelper {
     }
   }
 
-  def getCsvFiles(dir: String): List[File] = {
+  def getCsvFiles(dir: URI): List[File] = {
     val okFileExtensions = List("csv")
-    getListOfFiles(new File(dir), okFileExtensions)
+    getListOfFiles(new File(dir.getPath), okFileExtensions)
   }
 
   def extractCsvFileLines(file: File): List[String] = {
