@@ -16,7 +16,7 @@ object Main extends App {
     val collectionName = file.getName.replace(".csv","").toLowerCase
 
     db.createCollection(collectionName)
-    db.getCollection(collectionName).bulkWrite(body)
+    db.getCollection(collectionName).bulkWrite(body)//body does not conform to type...
     println(s"Done processing file ${index + 1}")
 
   }
