@@ -13,9 +13,15 @@ object FileHelper {
     }
   }
 
-  def getCsvFiles(dir: URI): List[File] = {
+  def getCsvFiles(dir: URI): Either[Exception, List[File]] = {
     val okFileExtensions = List("csv")
-    getListOfFiles(new File(dir.getPath), okFileExtensions)
+    try {
+      Right(getListOfFiles(new File(dir.getPath), okFileExtensions))
+    } catch {
+      case e: Exception =>
+        val message = s"Could not read files from path: ${e.getMessage}"
+        Left(new Exception(message))
+    }
   }
 
   def extractCsvFileLines(file: File): List[String] = {
