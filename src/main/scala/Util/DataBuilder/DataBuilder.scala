@@ -12,6 +12,7 @@ object DataBuilder {
   header.map { headerValue =>
       lineItems.map { line =>
         headerValue.zip(line.split(',').toList).zipWithIndex.map { case ((headerText, item), index) =>
+          if(item != "NULL")
           jsonPartialBuilder(index, headerText, item, headerValue.length -1)
         }
       }.map(row => convertJsonToDoc(row.mkString))
