@@ -12,7 +12,6 @@ object DataBuilder {
   header.map { headerValue =>
       lineItems.map { line =>
         headerValue.zip(line.split(',').toList).zipWithIndex.map { case ((headerText, item), index) =>
-          if(item != "NULL")
           jsonPartialBuilder(index, headerText, item, headerValue.length -1)
         }
       }.map(row => convertJsonToDoc(row.mkString))
@@ -20,6 +19,15 @@ object DataBuilder {
   }
 
   def jsonPartialBuilder(currentIndex: Int, headerText: String, item: String, maxIndex: Int): String = {
+    if(item != "NULL"){
+      parseJsonHandler(currentIndex, headerText, item, maxIndex)
+    } else{
+      parseJsonNullHandler(currentIndex, headerText, item, maxIndex)
+    }
+
+  }
+
+  def parseJsonHandler(currentIndex: Int, headerText: String, item: String, maxIndex: Int): String = {
     if (currentIndex == 0 && maxIndex == 0) {
       "{ "+headerText+": \""+item+"\" }"
     } else if (currentIndex == 0) {
@@ -37,9 +45,24 @@ object DataBuilder {
     }
   }
 
+  def parseJsonNullHandler(currentIndex: Int, headerText: String, item: String, maxIndex: Int): String = {
+    if (currentIndex == 0 && maxIndex == 0) {
+      "{ }"
+    } else if (currentIndex == 0) {
+      s"""
+         |{""".stripMargin
+    }
+    else if (currentIndex == maxIndex) {
+      s"""
+         |}
+      """.stripMargin
+    } else {
+     ""
+    }
+  }
+
   def convertJsonToDoc(data: String): Document = {
     import org.bson.Document
-    println(data)
     Document.parse(data)
   }
 
