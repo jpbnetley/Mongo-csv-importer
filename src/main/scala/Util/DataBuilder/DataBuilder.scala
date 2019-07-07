@@ -21,7 +21,7 @@ object DataBuilder {
 
   def jsonPartialBuilder(currentIndex: Int, headerText: String, item: String, maxIndex: Int): String = {
     if (currentIndex == 0 && maxIndex == 0) {
-      s"{ $headerText: $item }"
+      "{ "+headerText+": \""+item+"\" }"
     } else if (currentIndex == 0) {
       s"""
          |{
@@ -33,7 +33,7 @@ object DataBuilder {
          |}
       """.stripMargin
     } else {
-      s""""$headerText: "$item", """
+      headerText+": \""+item+"\", "
     }
   }
 
