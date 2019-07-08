@@ -13,10 +13,10 @@ object FileHelper {
     }
   }
 
-  def getCsvFiles(dir: URI): Either[Exception, List[File]] = {
+  def getCsvFiles(dir: URI, skipFiles: List[File] = List.empty[File]): Either[Exception, List[File]] = {
     val okFileExtensions = List("csv")
     try {
-      Right(getListOfFiles(new File(dir.getPath), okFileExtensions))
+      Right(getListOfFiles(new File(dir.getPath), okFileExtensions).diff(skipFiles))
     } catch {
       case e: Exception =>
         val message = s"Could not read files from path: ${e.getMessage}"
@@ -27,6 +27,18 @@ object FileHelper {
   def extractCsvFileLines(file: File): List[String] = {
     val reader = Source.fromFile(file.toPath.toUri, StandardCharsets.ISO_8859_1.name())
     reader.getLines().toList
+  }
+
+  def findFile(dir: URI, fileName: String): Option[File] = {
+    new File(dir.getPath).listFiles(_.isFile).find(_.getName == fileName)
+  }
+
+  def toUri(uri: String): Either[Exception, URI] = {
+    try{
+      Right(new URI(uri))
+    } catch {
+      case e: Exception => Left(new Exception(s"Could not convert to Uri $uri", e))
+    }
   }
 
 }
