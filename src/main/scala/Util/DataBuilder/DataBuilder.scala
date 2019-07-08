@@ -49,13 +49,10 @@ object DataBuilder {
     if (currentIndex == 0 && maxIndex == 0) {
       "{ }"
     } else if (currentIndex == 0) {
-      s"""
-         |{""".stripMargin
+      s"""{"""
     }
     else if (currentIndex == maxIndex) {
-      s"""
-         |}
-      """.stripMargin
+      s"""}"""
     } else {
      ""
     }

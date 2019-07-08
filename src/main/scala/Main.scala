@@ -27,7 +27,7 @@ object Main extends App {
 
     //http://zetcode.com/db/mongodbjava/
 
-    val db        = Database.init()
+//    val db        = Database.init()
 //    db.createCollection(collectionName)
     //db.getCollection(collectionName).insertMany(documentResult)
     println(s"Done processing file ${index + 1}")
@@ -35,12 +35,12 @@ object Main extends App {
 
   def promptUser(): Either[Exception, URI] = {
     //"/Users/jonathan/Downloads/northwind-mongo-master"
-    //windows box: D:\_JPBN Backup\Downloads\Documents\northwind-mongo-master\test
+    //windows box: D:/Temp/test
     try {
 //      println("Please enter the path to the csv files: ")
 //      val uriInput = scala.io.StdIn.readLine()
 //      Right(URI.create(uriInput))
-      Right(URI.create("D:/Temp/test"))
+      Right(URI.create("/Users/jonathan/Downloads/northwind-mongo-master"))
     } catch {
       case e: Exception =>
         val message = s"Could not read user input: ${e.getMessage}"
