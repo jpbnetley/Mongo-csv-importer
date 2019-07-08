@@ -1,8 +1,8 @@
 package Util.Database
 import com.mongodb.{MongoClientSettings, MongoCredential, ServerAddress}
-import com.mongodb.MongoCredential._
 import org.mongodb.scala.{MongoClient, MongoDatabase}
-import collection.JavaConverters._
+
+import scala.collection.JavaConverters._
 
 object Database {
 
@@ -15,7 +15,8 @@ object Database {
     * @return MongoClientSettings.Builder
     */
   private def mongoSettingsBuilder(authUser: String, authPassword: Array[Char], port: Int, address: String): MongoClientSettings.Builder = {
-    val credential: MongoCredential = createScramSha256Credential(authUser, address, authPassword)
+    val credential: MongoCredential = MongoCredential.createCredential(authUser, "admin", authPassword)
+
     MongoClientSettings.builder()
       .applyToClusterSettings(b => b.hosts(List(new ServerAddress(address, port)).asJava).build())
       .credential(credential)
@@ -43,6 +44,7 @@ object Database {
     } yield {
       val user          = sys.env.get("mongo_auth_uname")
       val password      = sys.env.get("mongo_auth_pw").map(_.toCharArray)
+
       (user, password) match {
         case (Some(usr), Some(pw)) => mongoSettingsBuilder(usr, pw, port, address)
         case _                      =>  mongoSettingsBuilder(address, port)
