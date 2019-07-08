@@ -19,12 +19,11 @@ object DataBuilder {
   }
 
   def jsonPartialBuilder(currentIndex: Int, headerText: String, item: String, maxIndex: Int): String = {
-    if(item != "NULL"){
+    if (item != "NULL") {
       parseJsonHandler(currentIndex, headerText, item, maxIndex)
-    } else{
+    } else {
       parseJsonNullHandler(currentIndex, headerText, item, maxIndex)
     }
-
   }
 
   def parseJsonHandler(currentIndex: Int, headerText: String, item: String, maxIndex: Int): String = {
