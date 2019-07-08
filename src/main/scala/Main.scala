@@ -23,14 +23,14 @@ object Main extends App {
 
     val mongoDocuments  = DataBuilder.DataBuilder.buildMongoDocuments(headers, lineItems)
     val documentResult  = mongoDocuments.fold(e => {println(s"ERROR: $e");List.empty[Document]}, identity)
-    val db       = database.getDatabase()
+    val db              = database.getDatabase()
+    val dbInsert        = db.getCollection[Document](collectionName).insertMany(documentResult)
 
-    val dbInsert = db.getCollection[Document](collectionName).insertMany(documentResult)
+    println("Insert into db")
 
     Await.result(dbInsert.toFuture, Duration.Inf)
 
-    println(s"Insert : $dbInsert")
-
+    println(s"Insert into db complete: $dbInsert")
     println(s"Done processing file ${index + 1}")
   }
 

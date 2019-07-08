@@ -29,7 +29,7 @@ object UserPrompt {
     * @return skipped items list
     */
   def addSkipItems(inputItems: List[String]): List[String] = {
-    println("Please enter any files to skip (enter :q to exit): ")
+    println("Please enter any files to skip (enter :q to exit) eg. filename.extension: ")
     val input = scala.io.StdIn.readLine()
     if (!inputItems.lastOption.contains(":q"))
       inputItems.drop(inputItems.length - 1)
