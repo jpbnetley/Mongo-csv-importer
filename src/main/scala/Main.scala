@@ -4,6 +4,9 @@ import Util.File.FileHelper
 import Util.UserPrompt._
 import org.bson.Document
 
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
 object Main extends App {
   val userInput       = promptUser()
   val userInputObject = userInput.fold(throw _, identity)
@@ -20,13 +23,14 @@ object Main extends App {
 
     val mongoDocuments  = DataBuilder.DataBuilder.buildMongoDocuments(headers, lineItems)
     val documentResult  = mongoDocuments.fold(e => {println(s"ERROR: $e");List.empty[Document]}, identity)
-    val db       = database.getDatabase()
+    val db              = database.getDatabase()
+    val dbInsert        = db.getCollection[Document](collectionName).insertMany(documentResult)
 
-    for {
-      _          <- db.createCollection(collectionName)
-      _          <- db.getCollection[Document](collectionName).insertMany(documentResult)
-    } yield ()
+    println("Insert into db")
 
+    Await.result(dbInsert.toFuture, Duration.Inf)
+
+    println(s"Insert into db complete: $dbInsert")
     println(s"Done processing file ${index + 1}")
   }
 
