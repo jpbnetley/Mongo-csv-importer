@@ -5,7 +5,7 @@ import Util.UserPrompt._
 import org.bson.Document
 
 import scala.concurrent.Await
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 
 object Main extends App {
   val userInput       = promptUser()
@@ -28,7 +28,7 @@ object Main extends App {
 
     println("Insert into db")
 
-    Await.result(dbInsert.toFuture, Duration.Inf)
+    Await.result(dbInsert.toFuture, Duration(5, SECONDS))
 
     println(s"Insert into db complete: $dbInsert")
     println(s"Done processing file ${index + 1}")
