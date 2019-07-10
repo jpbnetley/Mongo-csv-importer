@@ -1,10 +1,11 @@
 package Util.Database
 import com.mongodb.{MongoClientSettings, MongoCredential, ServerAddress}
+import monix.eval.Task
 import org.mongodb.scala.{MongoClient, MongoDatabase}
 
 import scala.collection.JavaConverters._
 
-object Database {
+case object Database {
 
   /** builds mongo settings with auth
     *
@@ -61,7 +62,7 @@ object Database {
     *
     * @return
     */
-  def getDatabase(): MongoDatabase = {
+  def getDatabase(): Task[MongoDatabase] = Task {
     database
   }
 
