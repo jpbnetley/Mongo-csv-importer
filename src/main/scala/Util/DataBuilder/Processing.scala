@@ -10,6 +10,9 @@ import cats.implicits._
 import monix.eval.Task
 import org.bson.Document
 
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
 object Processing {
 
   /** processes csv files, and inserts them into the Database
@@ -33,7 +36,7 @@ object Processing {
         dbInsert        <- EitherT.rightT[Task, Exception](db.getCollection[Document](collectionName).insertMany(documentResult))
       } yield {
         println(s"Insert into db complete: $dbInsert")
-        database.close()
+        Await.result(dbInsert.toFuture(), Duration.Inf)
         println(s"Done processing file ${index + 1}")
       }).value
     }.map { result =>

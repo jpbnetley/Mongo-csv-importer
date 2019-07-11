@@ -16,6 +16,9 @@ object Main extends TaskApp {
       csvFiles    <- EitherT(FileHelper.getCsvFiles(userInput.folderPath, userInput.skipFiles))
       zippedFiles =  csvFiles.zipWithIndex
       _           <- EitherT(Processing.csvFiles(zippedFiles))
-    } yield ExitCode.Success).valueOrF(Task.raiseError)
+    } yield {
+       database.close()
+       ExitCode.Success
+     }).valueOrF(Task.raiseError)
   }
 }

@@ -21,7 +21,7 @@ object DataBuilder {
         headerValue.zip(line.split(',').toList).zipWithIndex.map { case ((headerText, item), index) =>
           jsonPartialBuilder(index, headerText, item, headerValue.length - 1)
         }
-      }.map(row => Document.parse(row.mkString))
+      }.map{row => println{row.mkString.trim};Document.parse(row.mkString.trim)}
     }
   }
 
