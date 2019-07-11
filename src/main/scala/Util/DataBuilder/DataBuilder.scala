@@ -94,27 +94,4 @@ object DataBuilder {
       ""
     }
   }
-
-  def processCsvFiles(csvFiles: List[(File, Int)])(implicit database: Database.type): Task[Either[Exception, List[Unit]]] = {
-    Task.wanderUnordered(csvFiles) { case (file, index) =>
-      println(s"Processing file ${index + 1} of ${csvFiles.length} file name: ${file.getName}")
-      (for {
-        fileLines       <- EitherT(FileHelper.extractCsvFileLines(file))
-        headers         =  fileLines.headOption.map(_.split(',').toList)
-        lineItems       =  fileLines.drop(1)
-        collectionName  =  file.getName.replace(".csv", "").toLowerCase
-        mongoDocuments  =  buildMongoDocuments(headers, lineItems)
-        documentResult  <- EitherT.fromEither[Task](mongoDocuments)
-        db              <- EitherT.right[Exception](database.getDatabase())
-        dbInsert        <- EitherT.rightT[Task, Exception](db.getCollection[Document](collectionName).insertMany(documentResult))
-      } yield {
-        println(s"Insert into db complete: $dbInsert")
-        database.close()
-        println(s"Done processing file ${index + 1}")
-      }).value
-    }.map { result =>
-      val (errors, success) = result.separate
-      errors.headOption.toLeft(success)
-    }
-  }
 }
