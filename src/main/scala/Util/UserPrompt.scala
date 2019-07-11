@@ -3,8 +3,8 @@ package Util
 import Util.File.FileHelper
 import Util.Models.UserInput
 import cats.data.EitherT
-import monix.eval.Task
 import cats.implicits._
+import monix.eval.Task
 
 object UserPrompt {
 

@@ -3,8 +3,8 @@ import java.io.File
 import java.net.URI
 import java.nio.charset.StandardCharsets
 
-import monix.eval.Task
 import cats.implicits._
+import monix.eval.Task
 
 import scala.io.Source
 
@@ -56,7 +56,7 @@ object FileHelper {
     * @return optional found file
     */
   def findFile(dir: URI, fileName: String): Task[Either[Exception, File]] = Task {
-    Either.fromOption(new File(dir.getPath).listFiles(_.isFile).find(_.getName == fileName), new Exception("File not found"))
+    Either.fromOption(new File(dir.getPath).listFiles(_.isFile).find(_.getName == fileName), new Exception("File not found: "+fileName))
   }
 
   /** Casts a string to a url

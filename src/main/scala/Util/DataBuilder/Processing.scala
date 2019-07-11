@@ -6,9 +6,9 @@ import Util.DataBuilder.DataBuilder.buildMongoDocuments
 import Util.Database.Database
 import Util.File.FileHelper
 import cats.data.EitherT
+import cats.implicits._
 import monix.eval.Task
 import org.bson.Document
-import cats.implicits._
 
 object Processing {
 
