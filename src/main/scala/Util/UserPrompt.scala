@@ -2,6 +2,9 @@ package Util
 
 import Util.File.FileHelper
 import Util.Models.UserInput
+import cats.data.EitherT
+import cats.implicits._
+import monix.eval.Task
 
 object UserPrompt {
 
@@ -9,17 +12,23 @@ object UserPrompt {
     *
     * @return UserInput object
     */
-  def promptUser(): Either[Exception, UserInput] = {
+  def promptUser(): Task[Either[Exception, UserInput]] = {
     try {
       println("Please enter the path to the csv files: ")
-      val uriInput = FileHelper.toUri(scala.io.StdIn.readLine()).fold(throw _, identity)
-      val skipItems = addSkipItems(List.empty[String]).flatMap(FileHelper.findFile(uriInput, _))
+      (for {
+        uriInput  <- EitherT.fromEither[Task](FileHelper.toUri(scala.io.StdIn.readLine()))
+        skipItems <- EitherT.fromEither[Task](addSkipItems(List.empty[String]))
+        res       <- EitherT(Task.wanderUnordered(skipItems)(FileHelper.findFile(uriInput, _)).map { items =>
+          val (errors, files) = items.separate
+          val userInput = UserInput(uriInput, files)
+          errors.headOption.toLeft(userInput)
+        })
+      } yield res).value
 
-      Right(UserInput(uriInput, skipItems))
     } catch {
       case e: Exception =>
         val message = s"Could not read user input: ${e.getMessage}"
-        Left(new Exception(message))
+        Task.now(Left(new Exception(message)))
     }
   }
 
@@ -28,12 +37,16 @@ object UserPrompt {
     * @param inputItems
     * @return skipped items list
     */
-  def addSkipItems(inputItems: List[String]): List[String] = {
-    println("Please enter any files to skip (enter :q to exit) eg. filename.extension: ")
-    val input = scala.io.StdIn.readLine()
-    if (!inputItems.lastOption.contains(":q"))
-      inputItems.drop(inputItems.length - 1)
-    else addSkipItems(inputItems :+ input)
+  def addSkipItems(inputItems: List[String]): Either[Exception, List[String]] = {
+    try {
+      println("Please enter any files to skip (enter :q to exit) eg. filename.extension: ")
+      val input = scala.io.StdIn.readLine()
+      if (!inputItems.lastOption.contains(":q"))
+        Right(inputItems.drop(inputItems.length - 1))
+      else addSkipItems(inputItems :+ input)
+    } catch {
+      case e: Exception => Left(new Exception("Could not read user input: "+e.getMessage, e))
+    }
   }
 
 }
