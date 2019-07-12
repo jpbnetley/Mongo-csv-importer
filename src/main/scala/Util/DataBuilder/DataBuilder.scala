@@ -17,12 +17,33 @@ object DataBuilder {
     }
 
     header.map { headerValue =>
+      val maxHeaderIndex = headerValue.length - 1
       lineItems.map { line =>
-        headerValue.zip(line.split(',').toList).zipWithIndex.map { case ((headerText, item), index) =>
-          jsonPartialBuilder(index, headerText, item, headerValue.length - 1)
+        val nonEmptyCsvLine = handleShortColumnHeader(line, maxHeaderIndex)
+        headerValue.zip(nonEmptyCsvLine).zipWithIndex.map { case ((headerText, item), index) =>
+          jsonPartialBuilder(index, headerText, item, maxHeaderIndex)
         }
       }.map{row => println{row.mkString.trim};Document.parse(row.mkString.trim)}
     }
+  }
+
+  /** Checks of the line items are the same length as the headers, otherwise adds NULL for the missing headers
+    *
+    * @param lineRow the single line item that is comma separated (csv)
+    * @param maxIndex
+    * @return Csv with null for empty items
+    */
+  def handleShortColumnHeader(lineRow: String, maxIndex: Int): List[String] = {
+    def loopOverCsvString(acc: List[String], currentIndex: Int, maxIndex: Int): List[String] = {
+      if(currentIndex == maxIndex)
+        acc
+      else
+        loopOverCsvString(acc :+ ", NULL", currentIndex + 1, maxIndex)
+    }
+
+    val items         = lineRow.split(',').toList
+    val currentIndex  = items.length - 1
+    loopOverCsvString(items, currentIndex, maxIndex)
   }
 
   /** Extracts json per line item
