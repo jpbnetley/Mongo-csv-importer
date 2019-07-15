@@ -38,7 +38,7 @@ object DataBuilder {
       if(currentIndex == maxIndex)
         acc
       else
-        loopOverCsvString(acc :+ ", NULL", currentIndex + 1, maxIndex)
+        loopOverCsvString(acc :+ "NULL", currentIndex + 1, maxIndex)
     }
 
     val items         = lineRow.split(',').toList
