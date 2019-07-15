@@ -1,7 +1,5 @@
 package Util.DataBuilder
 
-import java.io.File
-
 import Util.DataBuilder.DataBuilder.buildMongoDocuments
 import Util.Database.Database
 import Util.File.FileHelper
@@ -12,6 +10,7 @@ import org.bson.Document
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.reflect.io.File
 
 object Processing {
 
@@ -24,18 +23,18 @@ object Processing {
   def csvFiles(csvFiles: List[(File, Int)])
               (implicit database: Database.type): Task[Either[Exception, Unit]] = {
     Task.wanderUnordered(csvFiles) { case (file, index) =>
-      println(s"Processing file ${index + 1} of ${csvFiles.length} file name: ${file.getName}")
+      println(s"Processing file ${index + 1} of ${csvFiles.length} file name: ${file.name}")
       (for {
         fileLines       <- EitherT(FileHelper.extractCsvFileLines(file))
         headers         =  fileLines.headOption.map(_.split(',').toList)
         lineItems       =  fileLines.drop(1)
-        collectionName  =  file.getName.replace(".csv", "").toLowerCase
+        collectionName  =  file.name.replace(".csv", "").toLowerCase
         mongoDocuments  =  buildMongoDocuments(headers, lineItems)
         documentResult  <- EitherT.fromEither[Task](mongoDocuments)
         db              <- EitherT.right[Exception](database.getDatabase())
         dbInsert        <- EitherT.rightT[Task, Exception](db.getCollection[Document](collectionName).insertMany(documentResult))
       } yield {
-        println(s"Insert into db complete: $dbInsert")
+        println(s"Inserting into db: $dbInsert")
         Await.result(dbInsert.toFuture(), Duration.Inf)
         println(s"Done processing file ${index + 1}")
       }).value

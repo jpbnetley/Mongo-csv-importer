@@ -16,11 +16,11 @@ object UserPrompt {
     try {
       println("Please enter the path to the csv files: ")
       (for {
-        uriInput  <- EitherT.fromEither[Task](FileHelper.toUri(scala.io.StdIn.readLine()))
+        directory <- EitherT.fromEither[Task](FileHelper.toDirectory(scala.io.StdIn.readLine()))
         skipItems <- EitherT.fromEither[Task](addSkipItems(List.empty[String]))
-        res       <- EitherT(Task.wanderUnordered(skipItems)(FileHelper.findFile(uriInput, _)).map { items =>
+        res       <- EitherT(Task.wanderUnordered(skipItems)(FileHelper.findFile(directory, _)).map { items =>
           val (errors, files) = items.separate
-          val userInput = UserInput(uriInput, files)
+          val userInput = UserInput(directory, files)
           errors.headOption.toLeft(userInput)
         })
       } yield res).value
