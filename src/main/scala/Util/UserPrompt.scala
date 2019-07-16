@@ -41,8 +41,8 @@ object UserPrompt {
     try {
       println("Please enter any files to skip (enter :q to exit) eg. filename.extension: ")
       val input = scala.io.StdIn.readLine()
-      if (!inputItems.lastOption.contains(":q"))
-        Right(inputItems.drop(inputItems.length - 1))
+      if (input.equals(":q"))
+        Right(inputItems)
       else addSkipItems(inputItems :+ input)
     } catch {
       case e: Exception => Left(new Exception("Could not read user input: "+e.getMessage, e))
