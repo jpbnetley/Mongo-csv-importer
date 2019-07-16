@@ -42,8 +42,7 @@ object DataBuilder {
     }
 
     val items         = lineRow.split(',').toList
-    val currentIndex  = items.length - 1
-    loopOverCsvString(items, currentIndex, maxIndex)
+    loopOverCsvString(items, 0, maxIndex)
   }
 
   /** Extracts json per line item
