@@ -22,15 +22,14 @@ object Processing {
     */
   def csvFiles(csvFiles: List[(File, Int)])
               (implicit database: Database.type): Task[Either[Exception, Unit]] = {
-    Task.wanderUnordered(csvFiles) { case (file, index) =>
+    Task.wander(csvFiles) { case (file, index) =>
       println(s"Processing file ${index + 1} of ${csvFiles.length} file name: ${file.name}")
       (for {
         fileLines       <- EitherT(FileHelper.extractCsvFileLines(file))
         headers         =  fileLines.headOption.map(_.split(',').toList)
         lineItems       =  fileLines.drop(1)
         collectionName  =  file.name.replace(".csv", "").toLowerCase
-        mongoDocuments  =  buildMongoDocuments(headers, lineItems)
-        documentResult  <- EitherT.fromEither[Task](mongoDocuments)
+        documentResult  <- EitherT(buildMongoDocuments(headers, lineItems))
         db              <- EitherT.right[Exception](database.getDatabase())
         dbInsert        <- EitherT.rightT[Task, Exception](db.getCollection[Document](collectionName).insertMany(documentResult))
       } yield {

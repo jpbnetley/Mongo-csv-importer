@@ -1,5 +1,7 @@
 package Util.DataBuilder
 import org.bson.Document
+import cats.implicits._
+import monix.eval.Task
 
 
 object DataBuilder {
@@ -10,21 +12,9 @@ object DataBuilder {
     * @param lineItems that contains the csv data
     * @return bsonDocument as String
     */
-  def buildMongoDocuments(headers: Option[List[String]], lineItems: List[String]): Either[Exception, List[Document]] = {
-    val header = headers match {
-      case Some(h) => Right(h)
-      case None => Left(new Exception("No Headers found for csv"))
-    }
-
-    header.map { headerValue =>
-      val maxHeaderIndex = headerValue.length - 1
-      lineItems.map { line =>
-        val nonEmptyCsvLine = handleShortColumnHeader(line, maxHeaderIndex)
-        headerValue.zip(nonEmptyCsvLine).zipWithIndex.map { case ((headerText, item), index) =>
-          jsonPartialBuilder(index, headerText, item, maxHeaderIndex)
-        }
-      }.map{row => println{row.mkString.trim};Document.parse(row.mkString.trim)}
-    }
+  def buildMongoDocuments(headers: Option[List[String]], lineItems: List[String]): Task[Either[Exception, List[Document]]] = Task {
+    val header              = Either.fromOption(headers, new Exception("No Headers found for csv"))
+    header.map(headers => buildJsonObject(headers, lineItems))
   }
 
   /** Checks of the line items are the same length as the headers, otherwise adds NULL for the missing headers
@@ -106,5 +96,25 @@ object DataBuilder {
     } else {
       ""
     }
+  }
+
+  /** Builds json objects from the headers and body items
+    *
+    * @param headerValue list of headers for the object (key)
+    * @param lineItems body of the object (value)
+    * @return List[Document]
+    */
+  def buildJsonObject(headerValue: List[String], lineItems: List[String]): List[Document] = {
+    val maxHeaderIndex    = headerValue.length - 1
+    val jsonObjects       = lineItems.map { line =>
+      val nonEmptyCsvLine = handleShortColumnHeader(line, maxHeaderIndex)
+
+      //Build json object for each line item
+      headerValue.zip(nonEmptyCsvLine).zipWithIndex.map { case ((headerText, item), index) =>
+        jsonPartialBuilder(index, headerText, item, maxHeaderIndex)
+      }.mkString.trim
+    }
+
+    jsonObjects.map{row => println{row.mkString.trim};Document.parse(row)}
   }
 }
