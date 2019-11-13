@@ -1,6 +1,5 @@
 package Util.Models
 
-import java.io.File
-import java.net.URI
+import scala.reflect.io.{Directory, File}
 
-final case class UserInput(folderPath: URI, skipFiles: List[File] = List.empty[File])
+final case class UserInput(folderPath: Directory, skipFiles: List[File] = List.empty[File])

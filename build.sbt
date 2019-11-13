@@ -6,7 +6,7 @@ scalacOptions += "-Ypartial-unification"
 
 libraryDependencies ++= Seq(
   "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0",
-  "io.monix"          %% "monix"              % "3.0.0-RC3",
+  "io.monix"          %% "monix"              % "3.1.0",
   "org.typelevel"     %% "cats-core"          % "2.0.0-M1"
 )
 

@@ -16,11 +16,11 @@ object UserPrompt {
     try {
       println("Please enter the path to the csv files: ")
       (for {
-        uriInput  <- EitherT.fromEither[Task](FileHelper.toUri(scala.io.StdIn.readLine()))
+        directory <- EitherT.fromEither[Task](FileHelper.toDirectory(scala.io.StdIn.readLine()))
         skipItems <- EitherT.fromEither[Task](addSkipItems(List.empty[String]))
-        res       <- EitherT(Task.wanderUnordered(skipItems)(FileHelper.findFile(uriInput, _)).map { items =>
+        res       <- EitherT(Task.wanderUnordered(skipItems)(FileHelper.findFile(directory, _)).map { items =>
           val (errors, files) = items.separate
-          val userInput = UserInput(uriInput, files)
+          val userInput = UserInput(directory, files)
           errors.headOption.toLeft(userInput)
         })
       } yield res).value
@@ -41,8 +41,8 @@ object UserPrompt {
     try {
       println("Please enter any files to skip (enter :q to exit) eg. filename.extension: ")
       val input = scala.io.StdIn.readLine()
-      if (!inputItems.lastOption.contains(":q"))
-        Right(inputItems.drop(inputItems.length - 1))
+      if (input.equals(":q"))
+        Right(inputItems)
       else addSkipItems(inputItems :+ input)
     } catch {
       case e: Exception => Left(new Exception("Could not read user input: "+e.getMessage, e))
