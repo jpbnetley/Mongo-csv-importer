@@ -3,7 +3,7 @@ import com.mongodb.{MongoClientSettings, MongoCredential, ServerAddress}
 import monix.eval.Task
 import org.mongodb.scala.{MongoClient, MongoDatabase}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 case object Database {
 
@@ -31,7 +31,7 @@ case object Database {
     */
   private def mongoSettingsBuilder(address: String, port: Int): MongoClientSettings.Builder = {
     MongoClientSettings.builder()
-      .applyToClusterSettings(b => b.hosts(List(new ServerAddress(address, port)).asJava)build())
+      .applyToClusterSettings(b => b.hosts(List(new ServerAddress(address, port)).asJava).build())
   }
 
   /** Extracts the env variables and returns the mongo settings
@@ -62,7 +62,7 @@ case object Database {
     *
     * @return
     */
-  def getDatabase(): Task[MongoDatabase] = Task {
+  def getDatabase: Task[MongoDatabase] = Task {
     database
   }
 
