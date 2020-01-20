@@ -62,9 +62,7 @@ case object Database {
     *
     * @return
     */
-  def getDatabase: Task[MongoDatabase] = Task {
-    database
-  }
+  def getDatabase: Task[MongoDatabase] = Task(database)
 
   /** Closes the mongo connection
     *

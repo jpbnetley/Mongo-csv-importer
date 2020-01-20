@@ -5,6 +5,7 @@ import Util.Models.UserInput
 import cats.data.EitherT
 import cats.implicits._
 import monix.eval.Task
+import Util.Logging.log
 
 object UserPrompt {
 
@@ -14,6 +15,7 @@ object UserPrompt {
     */
   def promptUser(): Task[Either[Exception, UserInput]] = {
     try {
+      log.trace("Asking user for input...")
       println("Please enter the path to the csv files: ")
       (for {
         directory <- EitherT.fromEither[Task](FileHelper.toDirectory(scala.io.StdIn.readLine()))
@@ -34,7 +36,7 @@ object UserPrompt {
 
   /** Prompts the user to add files to skip
     *
-    * @param inputItems
+    * @param inputItems the items that will skipped
     * @return skipped items list
     */
   def addSkipItems(inputItems: List[String]): Either[Exception, List[String]] = {

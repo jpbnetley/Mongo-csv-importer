@@ -6,6 +6,7 @@ import monix.eval.Task
 
 import scala.io.Source
 import scala.reflect.io.{Directory, File, Path}
+import Util.Logging.log
 
 object FileHelper {
   /** Gets csv files
@@ -20,6 +21,7 @@ object FileHelper {
       Right(dir.files.filter(file => okFileExtensions.contains(file.extension)).toList)
     }.onErrorHandle { e =>
         val message = s"Could not read files from path: ${e.getMessage}"
+        log.error(message, e)
         Left(new Exception(message))
       }
   }
