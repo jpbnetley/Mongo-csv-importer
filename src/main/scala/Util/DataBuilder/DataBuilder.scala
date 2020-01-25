@@ -2,6 +2,7 @@ package Util.DataBuilder
 import org.bson.Document
 import cats.implicits._
 import monix.eval.Task
+import Util.Logging.log
 
 
 object DataBuilder {
@@ -13,6 +14,7 @@ object DataBuilder {
     * @return bsonDocument as String
     */
   def buildMongoDocuments(headers: Option[List[String]], lineItems: List[String]): Task[Either[Exception, List[Document]]] = Task {
+    log.debug("finding headers")
     val header              = Either.fromOption(headers, new Exception("No Headers found for csv"))
     header.map(headers => buildJsonObject(headers, lineItems))
   }
@@ -20,10 +22,11 @@ object DataBuilder {
   /** Checks of the line items are the same length as the headers, otherwise adds NULL for the missing headers
     *
     * @param lineRow the single line item that is comma separated (csv)
-    * @param maxIndex
+    * @param maxIndex the max index for the line items
     * @return Csv with null for empty items
     */
   def handleShortColumnHeader(lineRow: String, maxIndex: Int): List[String] = {
+    @scala.annotation.tailrec
     def loopOverCsvString(acc: List[String], currentIndex: Int, maxIndex: Int): List[String] = {
       if(currentIndex == maxIndex)
         acc
@@ -53,7 +56,7 @@ object DataBuilder {
 
   /** Parses json with no Nulls
     *
-    * @param currentIndex
+    * @param currentIndex position of the parser
     * @param headerText for each object
     * @param item       value for the header text
     * @param maxIndex   max length of the csv file
@@ -79,7 +82,7 @@ object DataBuilder {
 
   /** Parses json with that contains a Null
     *
-    * @param currentIndex
+    * @param currentIndex value for the parser
     * @param headerText for each object
     * @param item       value for the header text
     * @param maxIndex   max length of the csv file
@@ -105,6 +108,7 @@ object DataBuilder {
     * @return List[Document]
     */
   def buildJsonObject(headerValue: List[String], lineItems: List[String]): List[Document] = {
+    log.debug("Parsing json")
     val maxHeaderIndex    = headerValue.length - 1
     val jsonObjects       = lineItems.map { line =>
       val nonEmptyCsvLine = handleShortColumnHeader(line, maxHeaderIndex)

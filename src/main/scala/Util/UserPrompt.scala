@@ -15,7 +15,7 @@ object UserPrompt {
     */
   def promptUser(): Task[Either[Exception, UserInput]] = {
     try {
-      log.trace("Asking user for input...")
+      log.debug("Prompting user for input...")
       println("Please enter the path to the csv files: ")
       (for {
         directory <- EitherT.fromEither[Task](FileHelper.toDirectory(scala.io.StdIn.readLine()))
@@ -30,6 +30,7 @@ object UserPrompt {
     } catch {
       case e: Exception =>
         val message = s"Could not read user input: ${e.getMessage}"
+        log.error(message)
         Task.now(Left(new Exception(message)))
     }
   }
@@ -41,13 +42,17 @@ object UserPrompt {
     */
   def addSkipItems(inputItems: List[String]): Either[Exception, List[String]] = {
     try {
+      log.debug("Prompting user to enter files to skip")
       println("Please enter any files to skip (enter :q to exit) eg. filename.extension: ")
       val input = scala.io.StdIn.readLine()
       if (input.equals(":q"))
         Right(inputItems)
       else addSkipItems(inputItems :+ input)
     } catch {
-      case e: Exception => Left(new Exception("Could not read user input: "+e.getMessage, e))
+      case e: Exception =>
+        val message = "Could not read user input: "+e.getMessage
+        log.error(message)
+        Left(new Exception(message, e))
     }
   }
 
