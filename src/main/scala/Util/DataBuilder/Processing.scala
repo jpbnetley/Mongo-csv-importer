@@ -11,6 +11,7 @@ import org.bson.Document
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.reflect.io.File
+import Util.Logging.log
 
 object Processing {
 
@@ -30,7 +31,7 @@ object Processing {
         lineItems       =  fileLines.drop(1)
         collectionName  =  file.name.replace(".csv", "").toLowerCase
         documentResult  <- EitherT(buildMongoDocuments(headers, lineItems))
-        db              <- EitherT.right[Exception](database.getDatabase())
+        db              <- EitherT.right[Exception](database.getDatabase)
         dbInsert        <- EitherT.rightT[Task, Exception](db.getCollection[Document](collectionName).insertMany(documentResult))
       } yield {
         println(s"Inserting into db: $dbInsert")
@@ -39,6 +40,7 @@ object Processing {
       }).value
     }.map { result =>
       val (errors, _) = result.separate
+      log.error(errors.headOption.fold("No error found")(_.getMessage))
       errors.headOption.toLeft(())
     }
   }
