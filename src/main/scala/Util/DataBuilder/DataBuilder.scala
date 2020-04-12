@@ -3,7 +3,7 @@ import org.bson.Document
 import cats.implicits._
 import monix.eval.Task
 import Util.Logging.log
-
+import Util.ErrorHandler._
 
 object DataBuilder {
 
@@ -15,7 +15,7 @@ object DataBuilder {
     */
   def buildMongoDocuments(headers: Option[List[String]], lineItems: List[String]): Task[Either[Exception, List[Document]]] = Task {
     log.debug("finding headers")
-    val header              = Either.fromOption(headers, new Exception("No Headers found for csv"))
+    val header              = Either.fromOption(headers, error("No Headers found for csv"))
     header.map(headers => buildJsonObject(headers, lineItems))
   }
 

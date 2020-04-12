@@ -2,6 +2,7 @@ package Util.Database
 import com.mongodb.{MongoClientSettings, MongoCredential, ServerAddress}
 import monix.eval.Task
 import org.mongodb.scala.{MongoClient, MongoDatabase}
+import Util.ErrorHandler._
 
 import scala.jdk.CollectionConverters._
 
@@ -54,7 +55,7 @@ case object Database {
   }
 
   private val databaseName              = sys.env("mongo_db_name")
-  private val settings                  = settingsBuilder().fold(throw new Exception("environment variables not set for db"))(identity)
+  private val settings                  = settingsBuilder().fold(throw error("environment variables not set for db"))(identity)
   private val mongoClient: MongoClient  = MongoClient(settings.build())
   private val database: MongoDatabase   = mongoClient.getDatabase(databaseName)
 
