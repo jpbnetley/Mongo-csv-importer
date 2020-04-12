@@ -10,7 +10,7 @@ mongo_port=;
 mongo_db_name=;
 ```
 
-##Usage
+## Usage
 When the user is prompted for their input to the path, the Raw path to the files should be  
 entered.
 eg: `c:/users/username/desktop/csvFiles`  
