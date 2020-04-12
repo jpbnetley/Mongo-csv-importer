@@ -12,6 +12,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.reflect.io.File
 import Util.Logging.log
+import Util.ErrorHandler._
 
 object Processing {
 
@@ -40,8 +41,7 @@ object Processing {
       }).value
     }.map { result =>
       val (errors, _) = result.separate
-      log.error(errors.headOption.fold("No error found")(_.getMessage))
-      errors.headOption.toLeft(())
+      errors.headOption.map(error).toLeft(())
     }
   }
 

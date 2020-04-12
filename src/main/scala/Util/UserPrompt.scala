@@ -6,6 +6,7 @@ import cats.data.EitherT
 import cats.implicits._
 import monix.eval.Task
 import Util.Logging.log
+import Util.ErrorHandler._
 
 object UserPrompt {
 
@@ -30,8 +31,7 @@ object UserPrompt {
     } catch {
       case e: Exception =>
         val message = s"Could not read user input: ${e.getMessage}"
-        log.error(message)
-        Task.now(Left(new Exception(message)))
+        errorT(message)
     }
   }
 

@@ -7,6 +7,7 @@ import monix.eval.Task
 import scala.io.Source
 import scala.reflect.io.{Directory, File, Path}
 import Util.Logging.log
+import Util.ErrorHandler._
 
 object FileHelper {
   /** Gets csv files
@@ -32,7 +33,7 @@ object FileHelper {
     * @param file to extract from
     * @return line items
     */
-  def extractCsvFileLines(file: File): Task[Either[Exception, List[String]]] = Task{
+  def extractCsvFileLines(file: File): Task[Either[Exception, List[String]]] = Task {
 
     try {
       log.debug("Reading in file")
@@ -73,8 +74,7 @@ object FileHelper {
       Right(Directory(directory))
     } catch {
       case e: Exception =>
-        val error = new Exception(s"Could not convert to Directory $dir", e)
-        Left(error)
+        errorL(s"Could not convert to Directory $dir", e)
     }
   }
 
