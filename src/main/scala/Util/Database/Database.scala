@@ -49,15 +49,15 @@ case object Database {
 
       (user, password) match {
         case (Some(usr), Some(pw)) => mongoSettingsBuilder(usr, pw, port, address)
-        case _                      =>  mongoSettingsBuilder(address, port)
+        case _                     =>  mongoSettingsBuilder(address, port)
       }
     }
   }
 
-  private val databaseName              = sys.env("mongo_db_name")
-  private val settings                  = settingsBuilder().fold(throw error("environment variables not set for db"))(identity)
-  private val mongoClient: MongoClient  = MongoClient(settings.build())
-  private val database: MongoDatabase   = mongoClient.getDatabase(databaseName)
+  private val databaseName: String                  = sys.env("mongo_db_name")
+  private val settings: MongoClientSettings.Builder = settingsBuilder().fold(throw error("environment variables not set for db"))(identity)
+  private val mongoClient: MongoClient              = MongoClient(settings.build())
+  private val database: MongoDatabase               = mongoClient.getDatabase(databaseName)
 
   /** Returns thee database instance
     *
