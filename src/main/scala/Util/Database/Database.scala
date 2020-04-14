@@ -40,7 +40,7 @@ case object Database {
     * @return MongoClientSettings.Builder
     */
   private def settingsBuilder(): Option[MongoClientSettings.Builder] = {
-    for{
+    for {
     address  <- sys.env.get("mongo_address")
     port     <- sys.env.get("mongo_port").map(_.toInt)
     } yield {
