@@ -54,7 +54,7 @@ case object Database {
     }
   }
 
-  private val databaseName: String                  = sys.env("mongo_db_name")
+  private val databaseName: String                  = sys.env.get("mongo_db_name").fold(throw error("environment variables not set for db name"))(identity)
   private val settings: MongoClientSettings.Builder = settingsBuilder().fold(throw error("environment variables not set for db"))(identity)
   private val mongoClient: MongoClient              = MongoClient(settings.build())
   private val database: MongoDatabase               = mongoClient.getDatabase(databaseName)
