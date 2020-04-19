@@ -3,10 +3,13 @@ import com.mongodb.{MongoClientSettings, MongoCredential, ServerAddress}
 import monix.eval.Task
 import org.mongodb.scala.{MongoClient, MongoDatabase}
 import Util.ErrorHandler._
+import cats.implicits._
 
 import scala.jdk.CollectionConverters._
 
 case object Database {
+
+  private var mongoClient: Option[MongoClient] = None
 
   /** builds mongo settings with auth
     *
@@ -54,20 +57,25 @@ case object Database {
     }
   }
 
-  private val databaseName: String                  = sys.env.get("mongo_db_name").fold(throw error("environment variables not set for db name"))(identity)
-  private val settings: MongoClientSettings.Builder = settingsBuilder().fold(throw error("environment variables not set for db"))(identity)
-  private val mongoClient: MongoClient              = MongoClient(settings.build())
-  private val database: MongoDatabase               = mongoClient.getDatabase(databaseName)
-
   /** Returns thee database instance
     *
     * @return
     */
-  def getDatabase: Task[MongoDatabase] = Task(database)
+  def getDatabase: Task[Either[Exception, MongoDatabase]] = Task.eval {
+    for {
+      databaseName <- Either.fromOption(sys.env.get("mongo_db_name"), error("environment variables not set for db name"))
+      settings     <- Either.fromOption(settingsBuilder(), error("environment variables not set for db"))
+      mongoClient  =  MongoClient(settings.build()).some
+      mClient      <- Either.fromOption(mongoClient, error("mongo client could not be defined"))
+    } yield mClient.getDatabase(databaseName)
+  }
 
   /** Closes the mongo connection
     *
     */
-  def close(): Unit = mongoClient.close()
+  def close(): Unit = mongoClient match {
+    case Some(db) => db.close()
+    case None     => ()
+  }
 
 }
