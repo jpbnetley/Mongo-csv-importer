@@ -21,17 +21,13 @@ object UserPrompt {
       (for {
         directory <- EitherT.fromEither[Task](FileHelper.toDirectory(scala.io.StdIn.readLine()))
         skipItems <- EitherT.fromEither[Task](addSkipItems(List.empty[String]))
-        res       <- EitherT(Task.wanderUnordered(skipItems)(FileHelper.findFile(directory, _)).map { items =>
-          val (errors, files) = items.separate
-          val userInput = UserInput(directory, files)
-          errors.headOption.toLeft(userInput)
-        })
-      } yield res).value
+        files     <- EitherT(Task.parTraverse(skipItems)(FileHelper.findFile(directory, _)).map(_.sequence))
+      } yield UserInput(directory, files)).value
 
     } catch {
       case e: Exception =>
-        val message = s"Could not read user input: ${e.getMessage}"
-        errorT(message)
+        val message = s"Could not read user input"
+        errorT(message, e)
     }
   }
 

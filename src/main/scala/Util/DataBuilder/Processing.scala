@@ -24,7 +24,7 @@ object Processing {
   def csvFiles(csvFiles: List[OrderedFile])
               (implicit database: MongoDatabase): Task[Either[Exception, Unit]] = {
     val insertion = {
-      Task.wander(csvFiles) { orderedFile =>
+      Task.parTraverse(csvFiles) { orderedFile =>
         println(s"Processing file ${orderedFile.index + 1} of ${csvFiles.length} file name: ${orderedFile.file.name}")
         (for {
           fileLines       <- EitherT(FileHelper.extractCsvFileLines(orderedFile.file))

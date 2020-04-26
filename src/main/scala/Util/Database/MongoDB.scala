@@ -19,7 +19,7 @@ case object MongoDB {
     */
   private def mongoSettingsBuilder(authUser: String, authPassword: Array[Char], port: Int, address: String): MongoClientSettings.Builder = {
     val credential: MongoCredential = MongoCredential.createCredential(authUser, "admin", authPassword)
-
+    println("Auth: "+credential.getAuthenticationMechanism.toString)
     MongoClientSettings.builder()
       .applyToClusterSettings(b => b.hosts(List(new ServerAddress(address, port)).asJava).build())
       .credential(credential)

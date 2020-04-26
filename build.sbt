@@ -10,4 +10,4 @@ libraryDependencies ++= Seq(
   "com.typesafe.scala-logging"  %% "scala-logging"      % "3.9.2"
 )
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.2"
