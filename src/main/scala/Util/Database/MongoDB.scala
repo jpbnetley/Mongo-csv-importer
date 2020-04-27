@@ -7,9 +7,7 @@ import cats.implicits._
 
 import scala.jdk.CollectionConverters._
 
-case object Database {
-
-  private var mongoClient: Option[MongoClient] = None
+case object MongoDB {
 
   /** builds mongo settings with auth
     *
@@ -52,8 +50,18 @@ case object Database {
 
       (user, password) match {
         case (Some(usr), Some(pw)) => mongoSettingsBuilder(usr, pw, port, address)
-        case _                     =>  mongoSettingsBuilder(address, port)
+        case _                     => mongoSettingsBuilder(address, port)
       }
+    }
+  }
+
+  /** Gets the mongo client
+    *
+    * @return Either error or MongoClient
+    */
+  def getMongoClient: Either[Exception, MongoClient] = {
+    Either.fromOption(settingsBuilder(), error("environment variables not set for db")).map { settings =>
+      MongoClient(settings.build())
     }
   }
 
@@ -61,21 +69,15 @@ case object Database {
     *
     * @return
     */
-  def getDatabase: Task[Either[Exception, MongoDatabase]] = Task.eval {
-    for {
-      databaseName <- Either.fromOption(sys.env.get("mongo_db_name"), error("environment variables not set for db name"))
-      settings     <- Either.fromOption(settingsBuilder(), error("environment variables not set for db"))
-      mongoClient  =  MongoClient(settings.build()).some
-      mClient      <- Either.fromOption(mongoClient, error("mongo client could not be defined"))
-    } yield mClient.getDatabase(databaseName)
+  def getDatabase(mongoClient: MongoClient): Task[Either[Exception, MongoDatabase]] = Task.eval {
+    Either.fromOption(sys.env.get("mongo_db_name"), error("environment variables not set for db name")).map { databaseName =>
+      mongoClient.getDatabase(databaseName)
+    }
   }
 
   /** Closes the mongo connection
     *
     */
-  def close(): Unit = mongoClient match {
-    case Some(db) => db.close()
-    case None     => ()
-  }
+  def close(mongoClient: MongoClient): Unit = mongoClient.close()
 
 }

@@ -1,7 +1,6 @@
 package Util.DataBuilder
 
 import Util.DataBuilder.DataBuilder.buildMongoDocuments
-import Util.Database.Database
 import Util.File.FileHelper
 import cats.data.EitherT
 import cats.implicits._
@@ -12,6 +11,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import Util.ErrorHandler._
 import Util.Models.OrderedFile
+import org.mongodb.scala.MongoDatabase
 
 object Processing {
 
@@ -22,18 +22,17 @@ object Processing {
     * @return Unit
     */
   def csvFiles(csvFiles: List[OrderedFile])
-              (implicit database: Database.type): Task[Either[Exception, Unit]] = {
+              (implicit database: MongoDatabase): Task[Either[Exception, Unit]] = {
     val insertion = {
-      Task.wander(csvFiles) { orderedFile =>
+      Task.parTraverse(csvFiles) { orderedFile =>
         println(s"Processing file ${orderedFile.index + 1} of ${csvFiles.length} file name: ${orderedFile.file.name}")
         (for {
-          fileLines <- EitherT(FileHelper.extractCsvFileLines(orderedFile.file))
-          headers = fileLines.headOption.map(_.split(',').toList)
-          lineItems = fileLines.drop(1)
-          collectionName = orderedFile.file.name.replace(".csv", "").toLowerCase
-          documentResult <- EitherT(buildMongoDocuments(headers, lineItems))
-          db <- EitherT(database.getDatabase)
-          dbInsert <- EitherT.rightT[Task, Exception](db.getCollection[Document](collectionName).insertMany(documentResult))
+          fileLines       <- EitherT(FileHelper.extractCsvFileLines(orderedFile.file))
+          headers         =  fileLines.headOption.map(_.split(',').toList)
+          lineItems       =  fileLines.drop(1)
+          collectionName  =  orderedFile.file.name.replace(".csv", "").toLowerCase
+          documentResult  <- EitherT(buildMongoDocuments(headers, lineItems))
+          dbInsert        <- EitherT.rightT[Task, Exception](database.getCollection[Document](collectionName).insertMany(documentResult))
         } yield {
           println(s"Inserting into db: $dbInsert")
           Await.result(dbInsert.toFuture(), Duration.Inf)
