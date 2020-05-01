@@ -1,9 +1,9 @@
-package Util.database
+package util.databaseProvider
 import com.mongodb.{MongoClientSettings, MongoCredential, ServerAddress}
 import monix.eval.Task
 import org.mongodb.scala.{MongoClient, MongoDatabase}
-import Util.ErrorHandler._
-import Util.models.SystemConfigPropertiesResponse
+import util.ErrorHandler._
+import util.models.SystemConfigPropertiesResponse
 import cats.implicits._
 
 import scala.jdk.CollectionConverters._

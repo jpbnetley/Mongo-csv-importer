@@ -1,9 +1,9 @@
-package Util.dataBuilder
+package util.dataBuilder
 import org.bson.Document
 import cats.implicits._
 import monix.eval.Task
-import Util.Logging.log
-import Util.ErrorHandler._
+import util.Logging.log
+import util.ErrorHandler._
 
 object DataBuilder {
 

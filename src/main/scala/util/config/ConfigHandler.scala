@@ -1,7 +1,7 @@
-package Util.config
+package util.config
 
-import Util.models.SystemConfigPropertiesResponse
-import Util.ErrorHandler._
+import util.models.SystemConfigPropertiesResponse
+import util.ErrorHandler._
 
 case object ConfigHandler {
   def init(): Either[Exception, SystemConfigPropertiesResponse] = {

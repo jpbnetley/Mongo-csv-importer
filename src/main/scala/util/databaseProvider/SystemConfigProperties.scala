@@ -1,6 +1,6 @@
-package Util.database
+package util.databaseProvider
 
-import Util.models.SystemConfigPropertiesResponse
+import util.models.SystemConfigPropertiesResponse
 
 trait SystemConfigProperties {
   /** validate of the configeration method is present

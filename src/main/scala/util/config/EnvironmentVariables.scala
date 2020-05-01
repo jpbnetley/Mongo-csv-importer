@@ -1,8 +1,8 @@
-package Util.config
+package util.config
 
-import Util.ErrorHandler.error
-import Util.database.SystemConfigProperties
-import Util.models.SystemConfigPropertiesResponse
+import util.ErrorHandler.error
+import util.databaseProvider.SystemConfigProperties
+import util.models.SystemConfigPropertiesResponse
 import cats.implicits._
 
 case object EnvironmentVariables extends SystemConfigProperties {

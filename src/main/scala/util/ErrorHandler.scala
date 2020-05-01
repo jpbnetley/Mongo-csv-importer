@@ -1,6 +1,6 @@
-package Util
+package util
 
-import Util.Logging.log
+import util.Logging.log
 import monix.eval.Task
 
 case object ErrorHandler {

@@ -1,11 +1,11 @@
-package Util.config
+package util.config
 
-import Util.database.SystemConfigProperties
-import Util.models.{ConfigFileResponse, SystemConfigPropertiesResponse}
+import util.databaseProvider.SystemConfigProperties
+import util.models.{ConfigFileResponse, SystemConfigPropertiesResponse}
 import pureconfig.ConfigSource
 import cats.implicits._
 import pureconfig.error.ConfigReaderFailures
-import Util.ErrorHandler._
+import util.ErrorHandler._
 
 
 case object ConfigFile extends SystemConfigProperties {

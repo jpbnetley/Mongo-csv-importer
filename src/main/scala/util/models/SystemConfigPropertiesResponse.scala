@@ -1,4 +1,4 @@
-package Util.models
+package util.models
 
 final case class SystemConfigPropertiesResponse(mongo_address: String,
                                                 mongo_port: Int,
