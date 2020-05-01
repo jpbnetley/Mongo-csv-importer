@@ -15,7 +15,7 @@ object Main extends TaskApp {
      val database: MongoDB.type = databaseProvider.MongoDB
 
      (for {
-      config        <- EitherT.fromEither[Task](ConfigHandler.init())
+      config        <- EitherT.fromEither[Task](ConfigHandler.init)
       mongoClient   =  database.getMongoClient(config)
       db            <- EitherT.liftF[Task, Exception, MongoDatabase](database.getDatabase(config, mongoClient))
       userInput     <- EitherT(promptUser())

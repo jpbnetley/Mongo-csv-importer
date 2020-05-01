@@ -2,18 +2,17 @@ package util.config
 
 import util.models.SystemConfigPropertiesResponse
 import util.ErrorHandler._
+import util.databaseProvider.SystemConfigProperties
 
 case object ConfigHandler {
-  def init(): Either[Exception, SystemConfigPropertiesResponse] = {
-    val configFile  = ConfigFile
-    val envVar      = EnvironmentVariables
+  def init: Either[Exception, SystemConfigPropertiesResponse] = {
+    val environments: List[SystemConfigProperties] = List(ConfigFile, EnvironmentVariables)
 
-    if (configFile.exists){
-      configFile.extractConfig
-    } else if (envVar.exists) {
-      envVar.extractConfig
-    } else {
-      Left(error("Could not find config"))
-    }
+    getEnvironment(environments)
+  }
+
+  private def getEnvironment(environments: List[SystemConfigProperties]): Either[Exception, SystemConfigPropertiesResponse]  = {
+    environments.find(_.exists).map(_.extractConfig)
+      .getOrElse(errorL("No environments are defined"))
   }
 }
