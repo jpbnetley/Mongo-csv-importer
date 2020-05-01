@@ -7,6 +7,7 @@ import pureconfig.generic.auto._
 import cats.implicits._
 import pureconfig.error.ConfigReaderFailures
 import util.ErrorHandler._
+import util.Logging.log
 
 
 case object ConfigFile extends SystemConfigProperties {
@@ -15,10 +16,12 @@ case object ConfigFile extends SystemConfigProperties {
     * @return Boolean, true if it exists
     */
   override def exists: Boolean = {
-    ConfigSource.default.load[ConfigFileResponse].leftMap(_.toList.exists(_.location.isDefined)) match {
+    val exist = ConfigSource.default.load[ConfigFileResponse].leftMap(_.toList.exists(_.location.isDefined)) match {
       case Right(_) => true
       case Left (e) => e
     }
+    log.info(s"Check if config file exists: $exist")
+    exist
   }
 
   /** extracts the config variables

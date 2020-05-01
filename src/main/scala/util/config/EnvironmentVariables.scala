@@ -4,13 +4,18 @@ import util.ErrorHandler.error
 import util.databaseProvider.SystemConfigProperties
 import util.models.SystemConfigPropertiesResponse
 import cats.implicits._
+import util.Logging.log
 
 case object EnvironmentVariables extends SystemConfigProperties {
   /** validate of the configeration method is present
     *
     * @return Boolean, true if it exists
     */
-  override def exists: Boolean = extractConfig.isRight
+  override def exists: Boolean = {
+    val exist = extractConfig.isRight
+    log.info(s"Check if env vars exists: $exist")
+    exist
+  }
 
   /** extracts the config variables
     *

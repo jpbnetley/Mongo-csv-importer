@@ -5,6 +5,7 @@
         </layout>
     </appender>
     <logger name="com.base22" level="TRACE"/>
+    <logger name="Mongo csv importer" level="TRACE"/>
     <root level="error">
         <appender-ref ref="STDOUT"/>
     </root>
