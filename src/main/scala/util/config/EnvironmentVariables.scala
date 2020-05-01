@@ -10,7 +10,7 @@ case object EnvironmentVariables extends SystemConfigProperties {
     *
     * @return Boolean, true if it exists
     */
-  override def exists: Boolean = extractConfig.isLeft
+  override def exists: Boolean = extractConfig.isRight
 
   /** extracts the config variables
     *

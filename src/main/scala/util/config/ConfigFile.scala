@@ -3,6 +3,7 @@ package util.config
 import util.databaseProvider.SystemConfigProperties
 import util.models.{ConfigFileResponse, SystemConfigPropertiesResponse}
 import pureconfig.ConfigSource
+import pureconfig.generic.auto._
 import cats.implicits._
 import pureconfig.error.ConfigReaderFailures
 import util.ErrorHandler._
@@ -14,7 +15,7 @@ case object ConfigFile extends SystemConfigProperties {
     * @return Boolean, true if it exists
     */
   override def exists: Boolean = {
-    ConfigSource.default.load[ConfigFileResponse].leftMap(_.toList.exists(_.location.isEmpty)) match {
+    ConfigSource.default.load[ConfigFileResponse].leftMap(_.toList.exists(_.location.isDefined)) match {
       case Right(_) => true
       case Left (e) => e
     }
@@ -30,7 +31,7 @@ case object ConfigFile extends SystemConfigProperties {
       .leftMap(toException)
   }
 
-  def toSystemConfigPropertiesResponse(configFileResponse: ConfigFileResponse) = {
+  def toSystemConfigPropertiesResponse(configFileResponse: ConfigFileResponse): SystemConfigPropertiesResponse = {
     SystemConfigPropertiesResponse(configFileResponse.mongo_address,
       configFileResponse.mongo_port,
       configFileResponse.mongo_db_name,
