@@ -1,8 +1,9 @@
-package Util.Database
+package Util.database
 import com.mongodb.{MongoClientSettings, MongoCredential, ServerAddress}
 import monix.eval.Task
 import org.mongodb.scala.{MongoClient, MongoDatabase}
 import Util.ErrorHandler._
+import Util.models.SystemConfigPropertiesResponse
 import cats.implicits._
 
 import scala.jdk.CollectionConverters._
@@ -40,40 +41,29 @@ case object MongoDB {
     *
     * @return MongoClientSettings.Builder
     */
-  private def settingsBuilder(): Option[MongoClientSettings.Builder] = {
-    for {
-    address  <- sys.env.get("mongo_address")
-    port     <- sys.env.get("mongo_port").map(_.toInt)
-    } yield {
-      val user          = sys.env.get("mongo_auth_uname")
-      val password      = sys.env.get("mongo_auth_pw").map(_.toCharArray)
+  private def settingsBuilder(props: SystemConfigPropertiesResponse): MongoClientSettings.Builder = {
 
-      (user, password) match {
-        case (Some(usr), Some(pw)) => mongoSettingsBuilder(usr, pw, port, address)
-        case _                     => mongoSettingsBuilder(address, port)
+      (props.mongo_auth_uname, props.mongo_auth_pw) match {
+        case (Some(usr), Some(pw)) => mongoSettingsBuilder(usr, pw, props.mongo_port, props.mongo_address)
+        case _                     => mongoSettingsBuilder(props.mongo_address, props.mongo_port)
       }
-    }
   }
 
   /** Gets the mongo client
     *
     * @return Either error or MongoClient
     */
-  def getMongoClient: Either[Exception, MongoClient] = {
-    Either.fromOption(settingsBuilder(), error("environment variables not set for db")).map { settings =>
-      MongoClient(settings.build())
+  def getMongoClient(props: SystemConfigPropertiesResponse): MongoClient = {
+    MongoClient(settingsBuilder(props).build())
     }
-  }
 
   /** Returns thee database instance
     *
     * @return
     */
-  def getDatabase(mongoClient: MongoClient): Task[Either[Exception, MongoDatabase]] = Task.eval {
-    Either.fromOption(sys.env.get("mongo_db_name"), error("environment variables not set for db name")).map { databaseName =>
-      mongoClient.getDatabase(databaseName)
+  def getDatabase(props: SystemConfigPropertiesResponse, mongoClient: MongoClient): Task[MongoDatabase] = Task.eval {
+      mongoClient.getDatabase(props.mongo_db_name)
     }
-  }
 
   /** Closes the mongo connection
     *

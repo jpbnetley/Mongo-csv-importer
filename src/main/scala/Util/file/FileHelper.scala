@@ -1,4 +1,4 @@
-package Util.File
+package Util.file
 import java.nio.charset.StandardCharsets
 
 import cats.implicits._

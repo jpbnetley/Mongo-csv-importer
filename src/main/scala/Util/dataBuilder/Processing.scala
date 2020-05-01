@@ -1,7 +1,7 @@
-package Util.DataBuilder
+package Util.dataBuilder
 
-import Util.DataBuilder.DataBuilder.buildMongoDocuments
-import Util.File.FileHelper
+import Util.dataBuilder.DataBuilder.buildMongoDocuments
+import Util.file.FileHelper
 import cats.data.EitherT
 import cats.implicits._
 import monix.eval.Task
@@ -10,7 +10,7 @@ import org.bson.Document
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import Util.ErrorHandler._
-import Util.Models.OrderedFile
+import Util.models.OrderedFile
 import org.mongodb.scala.MongoDatabase
 
 object Processing {

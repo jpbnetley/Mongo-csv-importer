@@ -1,4 +1,4 @@
-package Util.DataBuilder
+package Util.dataBuilder
 import org.bson.Document
 import cats.implicits._
 import monix.eval.Task
@@ -119,6 +119,8 @@ object DataBuilder {
       }.mkString.trim
     }
 
-    jsonObjects.map{row => println{row.mkString.trim};Document.parse(row)}
+    jsonObjects.map { row =>
+      println(row.mkString.trim)
+      Document.parse(row)}
   }
 }

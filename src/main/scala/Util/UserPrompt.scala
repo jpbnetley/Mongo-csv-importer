@@ -1,7 +1,7 @@
 package Util
 
-import Util.File.FileHelper
-import Util.Models.UserInput
+import Util.file.FileHelper
+import Util.models.UserInput
 import cats.data.EitherT
 import cats.implicits._
 import monix.eval.Task

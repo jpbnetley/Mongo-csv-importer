@@ -1,6 +1,6 @@
 package Util
 
-import Util.Models.OrderedFile
+import Util.models.OrderedFile
 
 import scala.reflect.io.File
 
