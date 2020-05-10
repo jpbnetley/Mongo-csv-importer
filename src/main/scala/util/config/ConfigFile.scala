@@ -16,11 +16,8 @@ case object ConfigFile extends SystemConfigProperties {
     * @return Boolean, true if it exists
     */
   override def exists: Boolean = {
-    val exist = ConfigSource.default.load[ConfigFileResponse].leftMap(_.toList.exists(_.location.isDefined)) match {
-      case Right(_) => true
-      case Left (e) => e
-    }
-    log.info(s"Check if config file exists: $exist")
+    val exist = ConfigSource.default.config().nonEmpty
+    log.info(s"Check if config file: application.conf exists: $exist")
     exist
   }
 
