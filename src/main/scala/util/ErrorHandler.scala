@@ -24,6 +24,11 @@ case object ErrorHandler {
     Left(new Exception(message, e))
   }
 
+  def errorL[A](exception: Exception): Left[Exception, A] = {
+    log.error(exception.getMessage)
+    Left(exception)
+  }
+
   def error(message: String): Exception = {
     log.error(message)
     new Exception(message)

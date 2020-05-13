@@ -1,14 +1,12 @@
 package util.config
 
 import util.databaseProvider.SystemConfigProperties
-import util.models.{ConfigFileResponse, SystemConfigPropertiesResponse}
-import pureconfig.ConfigSource
-import pureconfig.generic.auto._
-import cats.implicits._
-import pureconfig.error.ConfigReaderFailures
+import util.models.SystemConfigPropertiesResponse
+import com.typesafe.config.{Config, ConfigFactory}
 import util.ErrorHandler._
+import cats.implicits._
 import util.Logging.log
-
+import extensions._
 
 case object ConfigFile extends SystemConfigProperties {
   /** validate of the configeration method is present
@@ -16,7 +14,7 @@ case object ConfigFile extends SystemConfigProperties {
     * @return Boolean, true if it exists
     */
   override def exists: Boolean = {
-    val exist = ConfigSource.default.config().nonEmpty
+    val exist = !ConfigFactory.load().isEmpty
     log.info(s"Check if config file: application.conf exists: $exist")
     exist
   }
@@ -26,21 +24,31 @@ case object ConfigFile extends SystemConfigProperties {
     * @return SystemConfigPropertiesResponse
     */
   override def extractConfig: Either[Exception, SystemConfigPropertiesResponse] = {
-   ConfigSource.default.load[ConfigFileResponse]
-     .map(toSystemConfigPropertiesResponse)
-      .leftMap(toException)
+    try {
+      SystemConfigPropertiesResponse(
+        ConfigFactory.load().getString("mongo_address"),
+        ConfigFactory.load().getInt("mongo_port"),
+        ConfigFactory.load().getString("mongo_db_name"),
+        ConfigFactory.load().getOptionalString("mongo_auth_uname"),
+        ConfigFactory.load().getOptionalString("mongo_auth_pw").map(_.toCharArray)
+      ).asRight[Exception]
+
+    } catch {
+      case e: Exception => errorL(e)
+    }
+
   }
 
-  def toSystemConfigPropertiesResponse(configFileResponse: ConfigFileResponse): SystemConfigPropertiesResponse = {
-    SystemConfigPropertiesResponse(configFileResponse.mongo_address,
-      configFileResponse.mongo_port,
-      configFileResponse.mongo_db_name,
-      configFileResponse.mongo_auth_uname,
-      configFileResponse.mongo_auth_pw.map(_.toCharArray))
-  }
+}
 
-  def toException(configReaderFailures: ConfigReaderFailures): Exception = {
-    configReaderFailures.toList.map(e => error(e.description)).headOption.getOrElse(error("No exception found"))
+object extensions {
+
+  implicit class RichConfig(val underlying: Config) extends AnyVal {
+    def getOptionalString(path: String): Option[String] = if (underlying.hasPath(path)) {
+      Some(underlying.getString(path))
+    } else {
+      None
+    }
   }
 
 }
