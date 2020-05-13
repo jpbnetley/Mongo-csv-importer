@@ -4,8 +4,8 @@ Imports csv items into mongo
 #Injecting environment variables
 
 Environment variables can be injected in 2 ways.
-1. Via a config file.
-2. Via the system environment variables
+1. A config file.
+2. The system environment variables.
 
 When using the config file, create a config file `application.conf` located under  
 `src/main/resources`
@@ -24,7 +24,7 @@ mongo_auth_pw=
 ```
 
 # Usage
-When the user is prompted for their input to the path, the Raw path to the files should be  
+When the user gets prompted for their input to the path, the raw path to the files should be  
 entered.
 eg: `c:/users/username/desktop/csvFiles`  
-The file under this directory should be `.csv`
+The files under this directory should be `.csv`

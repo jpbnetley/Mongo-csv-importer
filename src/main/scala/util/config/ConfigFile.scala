@@ -2,11 +2,12 @@ package util.config
 
 import util.databaseProvider.SystemConfigProperties
 import util.models.SystemConfigPropertiesResponse
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.ConfigFactory
 import util.ErrorHandler._
 import cats.implicits._
 import util.Logging.log
-import extensions._
+import util.ImplicitConversions.RichConfig
+import util.models.enums.MongoDbEnvironmentNames
 
 case object ConfigFile extends SystemConfigProperties {
   /** validate of the configeration method is present
@@ -26,11 +27,11 @@ case object ConfigFile extends SystemConfigProperties {
   override def extractConfig: Either[Exception, SystemConfigPropertiesResponse] = {
     try {
       SystemConfigPropertiesResponse(
-        ConfigFactory.load().getString("mongo_address"),
-        ConfigFactory.load().getInt("mongo_port"),
-        ConfigFactory.load().getString("mongo_db_name"),
-        ConfigFactory.load().getOptionalString("mongo_auth_uname"),
-        ConfigFactory.load().getOptionalString("mongo_auth_pw").map(_.toCharArray)
+        ConfigFactory.load().getString(MongoDbEnvironmentNames.address.value),
+        ConfigFactory.load().getInt(MongoDbEnvironmentNames.port.value),
+        ConfigFactory.load().getString(MongoDbEnvironmentNames.name.value),
+        ConfigFactory.load().getOptionalString(MongoDbEnvironmentNames.username.value),
+        ConfigFactory.load().getOptionalString(MongoDbEnvironmentNames.password.value).map(_.toCharArray)
       ).asRight[Exception]
 
     } catch {
@@ -41,14 +42,3 @@ case object ConfigFile extends SystemConfigProperties {
 
 }
 
-object extensions {
-
-  implicit class RichConfig(val underlying: Config) extends AnyVal {
-    def getOptionalString(path: String): Option[String] = if (underlying.hasPath(path)) {
-      Some(underlying.getString(path))
-    } else {
-      None
-    }
-  }
-
-}

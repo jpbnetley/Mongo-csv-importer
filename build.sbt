@@ -8,7 +8,8 @@ libraryDependencies ++= Seq(
   "org.typelevel"               %% "cats-core"              % "2.1.1",
   "ch.qos.logback"              % "logback-classic"         % "1.2.3",
   "com.typesafe.scala-logging"  %% "scala-logging"          % "3.9.2",
-  "com.typesafe"                % "config"                  % "1.4.0"
+  "com.typesafe"                % "config"                  % "1.4.0",
+  "com.beachape"                %% "enumeratum"             % "1.6.0"
 )
 
 scalaVersion := "2.13.2"
