@@ -1,7 +1,7 @@
 # Mongo-csv-importer
 Imports csv items into mongo
 
-#Injecting environment variables
+# Injecting environment variables
 
 Environment variables can be injected in 2 ways.
 1. A config file.
