@@ -1,12 +1,12 @@
-package Util
+package util
 
-import Util.File.FileHelper
-import Util.Models.UserInput
+import util.file.FileHelper
+import util.models.UserInput
 import cats.data.EitherT
 import cats.implicits._
 import monix.eval.Task
-import Util.Logging.log
-import Util.ErrorHandler._
+import util.Logging.log
+import util.ErrorHandler._
 
 object UserPrompt {
 

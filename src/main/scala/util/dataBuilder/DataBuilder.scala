@@ -1,9 +1,9 @@
-package Util.DataBuilder
+package util.dataBuilder
 import org.bson.Document
 import cats.implicits._
 import monix.eval.Task
-import Util.Logging.log
-import Util.ErrorHandler._
+import util.Logging.log
+import util.ErrorHandler._
 
 object DataBuilder {
 
@@ -119,6 +119,8 @@ object DataBuilder {
       }.mkString.trim
     }
 
-    jsonObjects.map{row => println{row.mkString.trim};Document.parse(row)}
+    jsonObjects.map { row =>
+      println(row.mkString.trim)
+      Document.parse(row)}
   }
 }

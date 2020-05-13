@@ -1,4 +1,4 @@
-package Util.Models
+package util.models
 
 import scala.reflect.io.File
 

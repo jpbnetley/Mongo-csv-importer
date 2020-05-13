@@ -1,4 +1,4 @@
-package Util.File
+package util.file
 import java.nio.charset.StandardCharsets
 
 import cats.implicits._
@@ -6,8 +6,8 @@ import monix.eval.Task
 
 import scala.io.Source
 import scala.reflect.io.{Directory, File, Path}
-import Util.Logging.log
-import Util.ErrorHandler._
+import util.Logging.log
+import util.ErrorHandler._
 
 object FileHelper {
   /** Gets csv files

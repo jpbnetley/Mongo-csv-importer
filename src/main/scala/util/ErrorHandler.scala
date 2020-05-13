@@ -1,6 +1,6 @@
-package Util
+package util
 
-import Util.Logging.log
+import util.Logging.log
 import monix.eval.Task
 
 case object ErrorHandler {
@@ -22,6 +22,11 @@ case object ErrorHandler {
   def errorL(message: String, e: Exception): Left[Exception, Nothing] = {
     log.error(message)
     Left(new Exception(message, e))
+  }
+
+  def errorL[A](exception: Exception): Left[Exception, A] = {
+    log.error(exception.getMessage)
+    Left(exception)
   }
 
   def error(message: String): Exception = {
