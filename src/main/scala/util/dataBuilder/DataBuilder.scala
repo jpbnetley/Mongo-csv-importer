@@ -13,10 +13,8 @@ object DataBuilder {
     * @param lineItems that contains the csv data
     * @return bsonDocument as String
     */
-  def buildMongoDocuments(headers: Option[List[String]], lineItems: List[String]): Task[Either[Exception, List[Document]]] = Task {
-    log.debug("finding headers")
-    val header              = Either.fromOption(headers, error("No Headers found for csv"))
-    header.map(headers => buildJsonObject(headers, lineItems))
+  def buildMongoDocuments(headers: List[String], lineItems: List[String]): Task[List[Document]] = Task {
+     buildJsonObject(headers, lineItems)
   }
 
   /** Checks of the line items are the same length as the headers, otherwise adds NULL for the missing headers
