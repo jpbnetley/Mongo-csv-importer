@@ -20,7 +20,7 @@ object Main extends TaskApp {
       db            <- EitherT.liftF[Task, Exception, MongoDatabase](database.getDatabase(config, mongoClient))
       userInput     <- EitherT(promptUser())
       csvFiles      <- EitherT(FileHelper.getCsvFiles(userInput.folderPath, userInput.skipFiles))
-      orderedFiles  =  csvFiles.zipWithIndex.toOrderedFile()
+      orderedFiles  =  csvFiles.zipWithIndex.toOrderedFile
       _             <- EitherT(Processing.csvFiles(orderedFiles)(db))
     } yield {
        database.close(mongoClient)
