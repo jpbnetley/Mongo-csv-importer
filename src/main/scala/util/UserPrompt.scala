@@ -47,8 +47,7 @@ object UserPrompt {
     } catch {
       case e: Exception =>
         val message = "Could not read user input: "+e.getMessage
-        log.error(message)
-        Left(new Exception(message, e))
+        errorL(message)
     }
   }
 
