@@ -3,7 +3,7 @@ package util.databaseProvider
 import util.models.SystemConfigPropertiesResponse
 
 trait SystemConfigProperties {
-  /** validate of the configeration method is present
+  /** validate of the configuration method is present
     *
     * @return Boolean, true if it exists
     */

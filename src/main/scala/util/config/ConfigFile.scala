@@ -9,13 +9,16 @@ import util.Logging.log
 import util.ImplicitConversions.RichConfig
 import util.models.enums.MongoDbEnvironmentNames
 
+import scala.reflect.io.{Directory, Path}
+
 case object ConfigFile extends SystemConfigProperties {
-  /** validate of the configeration method is present
+  /** validate of the configuration method is present
     *
     * @return Boolean, true if it exists
     */
   override def exists: Boolean = {
-    val exist = !ConfigFactory.load().isEmpty
+    val configPath = Path("src/main/resources/application.conf")
+    val exist = Directory(configPath).exists
     log.info(s"Check if config file: application.conf exists: $exist")
     exist
   }

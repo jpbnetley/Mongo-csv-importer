@@ -8,7 +8,7 @@ import util.Logging.log
 import util.models.enums.MongoDbEnvironmentNames
 
 case object EnvironmentVariables extends SystemConfigProperties {
-  /** validate of the configeration method is present
+  /** validate of the configuration method is present
     *
     * @return Boolean, true if it exists
     */
