@@ -1,9 +1,7 @@
 package util.dataBuilder
-import org.bson.Document
-import cats.implicits._
 import monix.eval.Task
+import org.bson.Document
 import util.Logging.log
-import util.ErrorHandler._
 
 object DataBuilder {
 
@@ -14,7 +12,11 @@ object DataBuilder {
     * @return bsonDocument as String
     */
   def buildMongoDocuments(headers: List[String], lineItems: List[String]): Task[List[Document]] = Task {
-     buildJsonObject(headers, lineItems)
+     val jsonObjects = buildJsonObject(headers, lineItems)
+
+    jsonObjects.map { row =>
+      log.info("JSON objects: "+row.mkString.trim)
+      Document.parse(row)}
   }
 
   /** Checks of the line items are the same length as the headers, otherwise adds NULL for the missing headers
@@ -103,12 +105,13 @@ object DataBuilder {
     *
     * @param headerValue list of headers for the object (key)
     * @param lineItems body of the object (value)
-    * @return List[Document]
+    * @return List[String] in json format
     */
-  def buildJsonObject(headerValue: List[String], lineItems: List[String]): List[Document] = {
+  def buildJsonObject(headerValue: List[String], lineItems: List[String]): List[String] = {
     log.debug("Parsing json")
     val maxHeaderIndex    = headerValue.length - 1
-    val jsonObjects       = lineItems.map { line =>
+
+    lineItems.map { line =>
       val nonEmptyCsvLine = handleShortColumnHeader(line, maxHeaderIndex)
 
       //Build json object for each line item
@@ -116,9 +119,5 @@ object DataBuilder {
         jsonPartialBuilder(index, headerText, item, maxHeaderIndex)
       }.mkString.trim
     }
-
-    jsonObjects.map { row =>
-      log.info("JSON objects: "+row.mkString.trim)
-      Document.parse(row)}
   }
 }

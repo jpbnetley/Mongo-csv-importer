@@ -7,11 +7,7 @@ setup data to test against.
 This will act as the data that is read in from the csv
 file.
  */
-  val csvData: List[String] = {
-    List("name,surname,dob",
-      "Jack,Johnson,1993",
-      "Jannie,Fighter,1809")
-  }
+  val csvData: List[String] = Data.csvData
 
   /** Checks of the function gets the csv headers
     *
