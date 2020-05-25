@@ -32,7 +32,7 @@ object DataBuilder {
         loopOverCsvString(acc :+ "NULL", currentIndex + 1, maxIndex)
     }
 
-    val items         = lineRow.split(',').toList
+    val items = lineRow.split(',').toList
     loopOverCsvString(items, 0, maxIndex)
   }
 
@@ -118,7 +118,7 @@ object DataBuilder {
     }
 
     jsonObjects.map { row =>
-      println(row.mkString.trim)
+      log.info("JSON objects: "+row.mkString.trim)
       Document.parse(row)}
   }
 }

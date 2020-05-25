@@ -68,7 +68,7 @@ object FileHelper {
     * @return converted Directory
     */
   def toDirectory(dir: String): Either[Exception, Directory] = {
-    try{
+    try {
       log.debug("Build directory from path string")
       val directory = File(Path(dir))
       Right(Directory(directory))
