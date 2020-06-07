@@ -13,6 +13,7 @@ class JsonParsingTest extends AnyFunSuite {
     println(data)
     println(Data.correctJson)
 
+    // TODO: this test is failing, even though the data looks identical.
     val validation = data.equals(Data.correctJson)
     assert(validation)
   }
