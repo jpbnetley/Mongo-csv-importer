@@ -63,20 +63,22 @@ object DataBuilder {
     * @return json object partial string
     */
   def parseJsonHandler(currentIndex: Int, headerText: String, item: String, maxIndex: Int): String = {
+    val tab = "\t"
+
     if (currentIndex == 0 && maxIndex == 0) {
       "{ " + headerText + ": \"" + item + "\" }"
     } else if (currentIndex == 0) {
       s"""
          |{
-         |   $headerText: "$item", """.stripMargin
+         |$tab$headerText: "$item",""".stripMargin+"\n"
     }
     else if (currentIndex == maxIndex) {
       s"""
-         |   $headerText: "$item"
+         |$tab$headerText: "$item"
          |}
       """.stripMargin
     } else {
-      headerText + ": \"" + item + "\", "
+      tab + headerText + ": \"" + item + "\","
     }
   }
 
