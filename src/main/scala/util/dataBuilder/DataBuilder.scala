@@ -78,7 +78,7 @@ object DataBuilder {
          |}
       """.stripMargin
     } else {
-      tab + headerText + ": \"" + item + "\","
+      s"""${tab}${headerText}: "${item}","""
     }
   }
 
@@ -94,10 +94,10 @@ object DataBuilder {
     if (currentIndex == 0 && maxIndex == 0) {
       "{ }"
     } else if (currentIndex == 0) {
-      s"""{"""
+      "{"
     }
     else if (currentIndex == maxIndex) {
-      s"""}"""
+      "}"
     } else {
       ""
     }
@@ -111,7 +111,7 @@ object DataBuilder {
     */
   def buildJsonObject(headerValue: List[String], lineItems: List[String]): List[String] = {
     log.debug("Parsing json")
-    val maxHeaderIndex    = headerValue.length - 1
+    val maxHeaderIndex = headerValue.length - 1
 
     lineItems.map { line =>
       val nonEmptyCsvLine = handleShortColumnHeader(line, maxHeaderIndex)

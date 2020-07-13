@@ -12,10 +12,10 @@ file.
       "Jannie,Fighter,1809")
   }
 
-  val header    = "name,surname,dob"
-  val normalRow = "Jack,Johnson,1993"
-  val shortRow  = "Jannie,Fighter"
-  val veryShort = "Jannie"
+  val header      = "name,surname,dob"
+  val normalRow   = "Jack,Johnson,1993"
+  val shortRow    = "Jannie,Fighter"
+  val veryShort   = "Jannie"
   val correctJson = List(
     s"""|{
       |${tab}name: "Jack",
