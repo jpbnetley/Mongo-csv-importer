@@ -23,8 +23,7 @@ object FileHelper {
       Right(dir.files.filter(file => okFileExtensions.contains(file.extension)).toList)
     }.onErrorHandle { e =>
         val message = s"Could not read files from path: ${e.getMessage}"
-        log.error(message, e)
-        Left(new Exception(message))
+      errorL(message)
       }
   }
 
@@ -42,8 +41,7 @@ object FileHelper {
     } catch {
       case e: Exception =>
         val message = "Failed to extract csv files: "+ e.getMessage
-        log.error(message)
-        Left(new Exception(message, e))
+        errorL(message)
     }
   }
 
