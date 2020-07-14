@@ -8,7 +8,7 @@ import monix.eval.Task
 import org.bson.Document
 
 import scala.concurrent.Await
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 import util.ErrorHandler._
 import util.models.OrderedFile
 import org.mongodb.scala.MongoDatabase
@@ -35,7 +35,7 @@ object Processing {
           dbInsert        <- EitherT.rightT[Task, Exception](database.getCollection[Document](collectionName).insertMany(documentResult))
         } yield {
           println(s"Inserting into db: $dbInsert")
-          Await.result(dbInsert.toFuture(), Duration.Inf)
+          Await.result(dbInsert.toFuture(), 30.seconds)
           println(s"Done processing file ${orderedFile.index + 1}")
         }).value
       }
