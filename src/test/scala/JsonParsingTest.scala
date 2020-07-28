@@ -10,10 +10,6 @@ class JsonParsingTest extends AnyFunSuite {
     val normal  = List(Data.normalRow)
     val data    = buildJsonObject(header, normal)
 
-    println(data)
-    println(Data.correctJson)
-
-    // TODO: this test is failing, even though the data looks identical.
     val validation = Data.correctJson.exists(data.headOption.contains)
 
     assert(validation)
