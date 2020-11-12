@@ -13,8 +13,8 @@ libraryDependencies ++= {
 
   Seq(
     "org.mongodb.scala"           %% "mongo-scala-driver"     % "2.9.0",
-    "io.monix"                    %% "monix"                  % "3.2.2",
-    "org.typelevel"               %% "cats-core"              % "2.1.1",
+    "io.monix"                    %% "monix"                  % "3.3.0",
+    "org.typelevel"               %% "cats-core"              % "2.2.0",
     "ch.qos.logback"              % "logback-classic"         % "1.2.3",
     "com.typesafe.scala-logging"  %% "scala-logging"          % "3.9.2",
     "com.typesafe"                % "config"                  % "1.4.0",
@@ -22,7 +22,7 @@ libraryDependencies ++= {
   ) ++ scalaTest
 }
 
-scalaVersion := "2.13.2"
+scalaVersion := "2.13.3"
 
 //http://www.scalatest.org/user_guide/using_scalatest_with_sbt
 logBuffered in Test := false
