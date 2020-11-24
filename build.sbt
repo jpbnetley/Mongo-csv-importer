@@ -12,7 +12,7 @@ libraryDependencies ++= {
   }
 
   Seq(
-    "org.mongodb.scala"           %% "mongo-scala-driver"     % "2.9.0",
+    "org.mongodb.scala"           %% "mongo-scala-driver"     % "4.1.1",
     "io.monix"                    %% "monix"                  % "3.3.0",
     "org.typelevel"               %% "cats-core"              % "2.2.0",
     "ch.qos.logback"              % "logback-classic"         % "1.2.3",
