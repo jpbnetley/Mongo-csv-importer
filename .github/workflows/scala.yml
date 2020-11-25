@@ -15,10 +15,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 14
+    - name: Set up JDK 
       uses: actions/setup-java@v1
       with:
-        java-version: adopt@1.11
+        java-version: adopt@1.8
     - name: compile
       run: sbt clean; compile
     - name: Run tests
