@@ -18,7 +18,7 @@ jobs:
     - name: Set up JDK 
       uses: actions/setup-java@v1
       with:
-        java-version: adopt@1.8
+        java-version: 11
     - name: compile
       run: sbt clean; compile
     - name: Run tests
