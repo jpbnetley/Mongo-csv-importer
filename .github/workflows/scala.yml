@@ -1,0 +1,27 @@
+name: Scala CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+       fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Clean targets
+      run: sbt clean  
+    - name: Compile code
+      run: sbt compile
+    - name: Run tests
+      run: sbt test
