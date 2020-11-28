@@ -12,11 +12,12 @@ file.
       "Jannie,Fighter,1809")
   }
 
-  val header      = "name,surname,dob"
-  val normalRow   = "Jack,Johnson,1993"
-  val shortRow    = "Jannie,Fighter"
-  val veryShort   = "Jannie"
-  val correctJson = List(
+  val header: String      = csvData.headOption.getOrElse("")
+  val normalRow: String   = csvData match { case h::m::t => m}
+  val shortRow: String    = "Jannie,Fighter"
+  val veryShort: String   = "Jannie"
+
+  val correctJson: List[String] = List(
     s"""|{
       |${tab}name: "Jack",
       |${tab}surname: "Johnson",

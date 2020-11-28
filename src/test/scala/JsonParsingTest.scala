@@ -6,11 +6,11 @@ class JsonParsingTest extends AnyFunSuite {
   val csvData: List[String] = Data.csvData
 
   test("Build json object") {
-    val header  = Data.header.split(",").toList
-    val normal  = List(Data.normalRow)
-    val data    = buildJsonObject(header, normal)
+    val header: List[String] = Data.header.split(",").toList
+    val normal: List[String] = List(Data.normalRow)
+    val data: List[String]   = buildJsonObject(header, normal)
 
-    val validation = Data.correctJson.exists(data.headOption.contains)
+    val validation: Boolean = Data.correctJson.exists(data.headOption.contains)
 
     assert(validation)
   }
