@@ -15,13 +15,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
     - name: Set up JDK 
       uses: actions/setup-java@v1
       with:
         java-version: 11
+
+    - name: Cache SBT
+      uses: actions/cache@v2
+      with:
+        path: | 
+          ~/.ivy2/cache
+          ~/.sbt
+        key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
+    
     - name: Clean targets
       run: sbt clean  
+      
     - name: Compile code
       run: sbt compile
+      
     - name: Run tests
       run: sbt test
