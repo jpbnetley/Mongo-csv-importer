@@ -16,7 +16,7 @@ libraryDependencies ++= {
     "io.monix"                    %% "monix"                  % "3.4.0",
     "org.typelevel"               %% "cats-core"              % "2.6.1",
     "ch.qos.logback"              % "logback-classic"         % "1.2.3",
-    "com.typesafe.scala-logging"  %% "scala-logging"          % "3.9.3",
+    "com.typesafe.scala-logging"  %% "scala-logging"          % "3.9.4",
     "com.typesafe"                % "config"                  % "1.4.1",
     "com.beachape"                %% "enumeratum"             % "1.6.1",
   ) ++ scalaTest
