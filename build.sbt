@@ -17,7 +17,7 @@ libraryDependencies ++= {
     "org.typelevel"               %% "cats-core"              % "2.7.0",
     "ch.qos.logback"              % "logback-classic"         % "1.2.10",
     "com.typesafe.scala-logging"  %% "scala-logging"          % "3.9.4",
-    "com.typesafe"                % "config"                  % "1.4.1",
+    "com.typesafe"                % "config"                  % "1.4.2",
     "com.beachape"                %% "enumeratum"             % "1.7.0",
   ) ++ scalaTest
 }
