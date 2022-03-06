@@ -15,7 +15,7 @@ libraryDependencies ++= {
     "org.mongodb.scala"           %% "mongo-scala-driver"     % "4.5.0",
     "io.monix"                    %% "monix"                  % "3.4.0",
     "org.typelevel"               %% "cats-core"              % "2.7.0",
-    "ch.qos.logback"              % "logback-classic"         % "1.2.10",
+    "ch.qos.logback"              % "logback-classic"         % "1.2.11",
     "com.typesafe.scala-logging"  %% "scala-logging"          % "3.9.4",
     "com.typesafe"                % "config"                  % "1.4.2",
     "com.beachape"                %% "enumeratum"             % "1.7.0",
