@@ -4,7 +4,7 @@ version := "0.1"
 
 libraryDependencies ++= {
   val scalaTest: Seq[ModuleID] = {
-    val version = "3.2.10"
+    val version = "3.2.15"
     Seq(
       "org.scalactic" %% "scalactic"        % version,
       "org.scalatest" % "scalatest_2.13"    % version   % "test"
