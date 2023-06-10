@@ -22,7 +22,7 @@ libraryDependencies ++= {
   ) ++ scalaTest
 }
 
-scalaVersion := "2.13.10"
+scalaVersion := "2.13.11"
 
 //http://www.scalatest.org/user_guide/using_scalatest_with_sbt
 logBuffered in Test := false
