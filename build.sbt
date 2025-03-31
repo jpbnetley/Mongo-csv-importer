@@ -18,7 +18,7 @@ libraryDependencies ++= {
     "ch.qos.logback"              % "logback-classic"         % "1.5.6",
     "com.typesafe.scala-logging"  %% "scala-logging"          % "3.9.5",
     "com.typesafe"                % "config"                  % "1.4.3",
-    "com.beachape"                %% "enumeratum"             % "1.7.3",
+    "com.beachape"                %% "enumeratum"             % "1.7.6",
   ) ++ scalaTest
 }
 
